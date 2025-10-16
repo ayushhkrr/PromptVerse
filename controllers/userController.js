@@ -5,6 +5,7 @@ import Prompt from "../models/promptModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import protect from "../middleware/auth.js";
+import adminAuth from "../middleware/admin.js";
 
 export const userRegister = async (req, res) => {
   const { fullName, username, email, password } = req.body;
@@ -45,9 +46,10 @@ export const userLogin = async (req, res) => {
     if ((!username && !email) || !password) {
       return res.status(400).json("Enter the necessary fields");
     }
-    const user = await User.findOne({ $or: [{ username }, { email }], status: 'Active' }).select(
-      "+password"
-    );
+    const user = await User.findOne({
+      $or: [{ username }, { email }],
+      status: "Active",
+    }).select("+password");
     if (!user) {
       return res.status(400).json("Invalid Credentials");
     }
@@ -109,7 +111,30 @@ export const userDelete = async (req, res) => {
       res.status(403).json({ Forbidden: "User not authorized" });
     }
     const deletedUser = await User.findByIdAndDelete(req.params.id);
-    return res.status(200).json({ message: 'User got deleted' });
+    return res.status(200).json({ message: "User got deleted" });
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500).json("Server error!");
+  }
+};
+
+export const statusUpdate = async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    const allowedStatus = ["active", "banned", "deleted"];
+    if (!allowedStatus.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json("User not found!");
+    }
+    user.status = status;
+    await user.save();
+    res
+      .status(200)
+      .json({ message: "User status updated successsfully", user });
   } catch (e) {
     console.error(e.stack);
     res.status(500).json("Server error!");
