@@ -1,54 +1,55 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-
-const promptSchema = new mongoose.Schema({
+const promptSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true, 
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     body: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,   //this is the link between the promt and the user who it belongs to
-        ref: 'User',
-        required: true
-    }, 
+      type: mongoose.Schema.Types.ObjectId, //this is the link between the promt and the user who it belongs to
+      ref: "User",
+      required: true,
+    },
     price: {
-        type: Number,
-        required: true
+      type: Number,
+      required: true,
     },
     category: {
-        type: String,   //(in which category the prompt falls ex:- ChatGpt , midjourney)
-        required: true,
+      type: String, //(in which category the prompt falls ex:- ChatGpt , midjourney)
+      required: true,
     },
     status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+    },
+    thumbnail: {
+      public_id: {
+        type: String, //(Related to Cloudinary platform)
+        required: true,
+      },
+      url: {
         type: String,
-        enum: ['pending', 'approved', 'rejected'],
-        default: 'pending'
-
+        required: true,
+      },
     },
-    thumbnail:{
-        public_id: {
-            type: String,   //(Related to Cloudinary platform)
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
-        }
+    sampleInput: {
+      type: String,
     },
-    sampleInput:{
-        type: String
+    purchaseCount: {
+      type: Number,
+      default: 0,
     },
-    purchaseCount:{
-        type: Number,
-        default: 0
-    }
-}, {timestamps: true})
+  },
+  { timestamps: true }
+);
 
-const Prompt = mongoose.model('Prompts', promptSchema)
+const Prompt = mongoose.model("Prompts", promptSchema);
 
-export default Prompt
+export default Prompt;

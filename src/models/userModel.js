@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import Prompt from './promptModel.js'
+import Prompt from "./promptModel.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -71,15 +71,15 @@ userSchema.pre("save", function (next) {
   }
 });
 
-userSchema.pre('findOneAndDelete',async function (next){
-  try{
-    const user = await this.model.findOne(getFilter())
-    await Prompt.deleteMany({user: user._id})
-    next()
-  }catch(e){
-    next(e)
+userSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const user = await this.model.findOne(getFilter());
+    await Prompt.deleteMany({ user: user._id });
+    next();
+  } catch (e) {
+    next(e);
   }
-})
+});
 
 const User = mongoose.model("User", userSchema);
 
