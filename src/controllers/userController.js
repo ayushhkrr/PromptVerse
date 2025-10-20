@@ -140,3 +140,24 @@ export const statusUpdate = async (req, res) => {
     res.status(500).json("Server error!");
   }
 };
+
+export const becomeSeller = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (user.role === "seller" || user.role === "admin") {
+      return res
+        .status(400)
+        .json({ message: "You are already a seller or admin" });
+    }
+    user.role = "seller";
+    const updatedRole = await user.save();
+    user.password = undefined;
+    res.status(200).json({
+      message: "Congratulations! You became a seller.",
+      user: updatedRole,
+    });
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500).json("Server error!");
+  }
+};

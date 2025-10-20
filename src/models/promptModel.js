@@ -24,6 +24,11 @@ const promptSchema = new mongoose.Schema(
       type: String, //(in which category the prompt falls ex:- ChatGpt , midjourney)
       required: true,
     },
+    promptType:{
+      type: String,
+      enum: ['text','image'],
+      required: [true, 'Prompt type is required (text or image)']
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -41,6 +46,7 @@ const promptSchema = new mongoose.Schema(
     },
     sampleInput: {
       type: String,
+      required: [true, 'A sample input is required to generate the preview']
     },
     purchaseCount: {
       type: Number,

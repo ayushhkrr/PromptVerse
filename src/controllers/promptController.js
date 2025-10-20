@@ -1,5 +1,4 @@
 import Prompt from "../models/promptModel.js";
-import User from "../models/userModel.js";
 import { upload } from "../middleware/multer.js";
 import { cloudinary } from "../config/cloudinary.js";
 
@@ -7,11 +6,11 @@ export const createPrompt = async (req, res) => {
   try {
     const { title, price, body, category, sampleInput } = req.body;
 
-    if (!title || !price || !body || !category) {
+    if (!title || !price || !body || !category || !sampleInput) {
       return res
         .status(400)
         .json({
-          message: "Title, price, body, and category are required fields.",
+          message: "Title, price, body, sampleInput and category are required fields.",
         });
     }
 
@@ -58,7 +57,7 @@ export const getPrompts = async (req, res) => {
 
 export const allApprovedPrompts = async (req, res) => {
   try {
-    const prompts = await Prompt.find({ status: "approved" });
+    const prompts = await Prompt.find({ status: "approved" }).select('title price thumbnail sampleInput category');
     res.status(200).json(prompts);
   } catch (e) {
     console.error(e.stack);
