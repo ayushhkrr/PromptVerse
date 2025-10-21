@@ -1,17 +1,17 @@
 import Prompt from "../models/promptModel.js";
 import { upload } from "../middleware/multer.js";
 import { cloudinary } from "../config/cloudinary.js";
+import { generatePreview } from "../Services/OpenAI.js";
 
 export const createPrompt = async (req, res) => {
   try {
     const { title, price, body, category, sampleInput } = req.body;
 
     if (!title || !price || !body || !category || !sampleInput) {
-      return res
-        .status(400)
-        .json({
-          message: "Title, price, body, sampleInput and category are required fields.",
-        });
+      return res.status(400).json({
+        message:
+          "Title, price, body, sampleInput and category are required fields.",
+      });
     }
 
     if (req.user.role !== "seller") {
@@ -57,7 +57,9 @@ export const getPrompts = async (req, res) => {
 
 export const allApprovedPrompts = async (req, res) => {
   try {
-    const prompts = await Prompt.find({ status: "approved" }).select('title price thumbnail sampleInput category');
+    const prompts = await Prompt.find({ status: "approved" }).select(
+      "title price thumbnail sampleInput category"
+    );
     res.status(200).json(prompts);
   } catch (e) {
     console.error(e.stack);
@@ -145,5 +147,37 @@ export const updatePropmtStatus = async (req, res) => {
   } catch (e) {
     console.error(e.stack);
     res.status(500).json("Server error!");
+  }
+};
+
+export const getPromptPreview = async (req, res) => {
+  try {
+    const prompt = await Prompt.findById(req.params.id);
+
+    if (!prompt || prompt.status !== "approved") {
+      return res
+        .status(404)
+        .json({ message: "Prompt not found or is not approved" });
+    }
+
+    if (!prompt.sampleInput) {
+      return res
+        .status(400)
+        .json({
+          message: "This prompt does not have a sample input for preview",
+        });
+    }
+    const aiResponse = await generatePreview(
+      prompt.body,
+      prompt.sampleInput,
+      prompt.promptType
+    );
+    res.status(200).json({
+      promptType: prompt.promptType,
+      preview: aiResponse,
+    });
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500).json({message:"Server error!"});
   }
 };

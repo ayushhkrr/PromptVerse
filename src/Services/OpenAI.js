@@ -28,7 +28,9 @@ export const generatePreview = async (promptBody, sampleInput, promptType) => {
       throw new Error("Invalid prompt type specified");
     }
   } catch (e) {
-    console.error('Error communicating with OpenAI API', e)
-    throw new Error('Failed to generate AI preview')
+    console.error("Error communicating with OpenAI API", e);
+    throw new Error("Failed to generate AI preview");
   }
 };
+
+export { generatePreview };
