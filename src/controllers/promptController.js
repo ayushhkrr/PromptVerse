@@ -161,11 +161,9 @@ export const getPromptPreview = async (req, res) => {
     }
 
     if (!prompt.sampleInput) {
-      return res
-        .status(400)
-        .json({
-          message: "This prompt does not have a sample input for preview",
-        });
+      return res.status(400).json({
+        message: "This prompt does not have a sample input for preview",
+      });
     }
     const aiResponse = await generatePreview(
       prompt.body,
@@ -178,6 +176,6 @@ export const getPromptPreview = async (req, res) => {
     });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json({message:"Server error!"});
+    res.status(500).json({ message: "Server error!" });
   }
 };

@@ -8,7 +8,7 @@ import {
   allApprovedPrompts,
   deletePrompts,
   updatePromptStatus,
-  getPromptPreview
+  getPromptPreview,
 } from "../controllers/promptController.js";
 import express from "express";
 
@@ -26,6 +26,6 @@ routes.get("/myprompts", protect, getPrompts);
 
 routes.delete("/:id", protect, deletePrompts);
 
-routes.get('/:id/preview', getPromptPreview)
+routes.get("/:id/preview", getPromptPreview);
 
 export default routes;
