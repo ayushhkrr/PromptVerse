@@ -4,6 +4,7 @@ import Prompt from "../models/promptModel.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 export const createCheckoutSession = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ export const createCheckoutSession = async (req, res) => {
     const userId = req.user.id;
 
     const prompt = await Prompt.findById(promptId);
-    
+
     if (!prompt || prompt.status !== "approved") {
       return res
         .status(404)
@@ -35,7 +36,6 @@ export const createCheckoutSession = async (req, res) => {
         .status(400)
         .json({ message: "Price cannot be negative or zero." });
     }
-
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
