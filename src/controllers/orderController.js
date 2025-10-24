@@ -2,9 +2,67 @@ import dotenv from "dotenv";
 dotenv.config();
 import Prompt from "../models/promptModel.js";
 import Stripe from "stripe";
+import Order from "../models/orderModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+const createOrder = async (session) => {
+  try {
+    const userId = session.metadata.userId;
+    const promptId = session.metadata.promptId;
+    const prompt = await Prompt.findById(promptId);
+    if (!prompt) {
+      console.log(
+        `Webhook error: Prompt not found with ID ${promptId} during order creation.`
+      );
+      return;
+    }
+    await Order.create({
+      user: userId,
+      prompt: promptId,
+      price: prompt.price,
+    });
+
+    prompt.purchaseCount = (prompt.purchaseCount || 0) + 1;
+    await prompt.save();
+    console.log(
+      `Webhook: Order created successfully for user ${userId}, prompt ${promptId}`
+    );
+  } catch (e) {
+    console.error("Error fulfilling the order", e);
+  }
+};
+
+export const handleStripeWebhook = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  const rawBody = req.body;
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+  } catch (e) {
+    console.error(`Webhook signature verification failed: ${e.stack}`);
+    return res.status(400).send(`Webhook error: ${e.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object;
+    if (session.payment_status === "paid") {
+      console.log(
+        `Webhook: Payment successful for session ${session.id}. Fulfilling order...`
+      );
+      await createOrder(session);
+    } else {
+      console.log(
+        `Webhook received: Checkout session ${session.id} completed but payment status is ${session.payment_status}.`
+      );
+    }
+  } else {
+    console.error(`Webhook received: Unhandled event type ${event.type}`);
+  }
+
+  res.status(200).json({ received: true });
+};
 
 export const createCheckoutSession = async (req, res) => {
   try {
