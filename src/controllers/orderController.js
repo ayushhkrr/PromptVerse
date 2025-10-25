@@ -3,6 +3,7 @@ dotenv.config();
 import Prompt from "../models/promptModel.js";
 import Stripe from "stripe";
 import Order from "../models/orderModel.js";
+import Log from "../models/logModel.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -18,7 +19,7 @@ const createOrder = async (session) => {
       );
       return;
     }
-    await Order.create({
+    const newOrder = await Order.create({
       user: userId,
       prompt: promptId,
       price: prompt.price,
@@ -29,6 +30,19 @@ const createOrder = async (session) => {
     console.log(
       `Webhook: Order created successfully for user ${userId}, prompt ${promptId}`
     );
+    try {
+      await Log.create({
+        user: userId,
+        action: "ORDER_PLACED",
+        details: {
+          orderId: newOrder._id,
+          promptId,
+          price: prompt.price,
+        },
+      });
+    } catch (e) {
+      console.error("Failed to log prompt update", e.stack);
+    }
   } catch (e) {
     console.error("Error fulfilling the order", e);
   }

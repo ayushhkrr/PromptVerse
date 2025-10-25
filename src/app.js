@@ -9,8 +9,8 @@ import { handleStripeWebhook } from "./controllers/orderController.js";
 
 const app = express();
 app.post(
-  "api/orders/webhook",
-  express.raw({ type: "apllication/json" }),
+  "/api/orders/webhook",
+  express.raw({ type: "application/json" }),
   handleStripeWebhook
 );
 const PORT = process.env.PORT || 5000;
@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/prompts", promptRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 const startServer = async () => {
   await connectdb();

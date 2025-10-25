@@ -2,6 +2,7 @@ import Prompt from "../models/promptModel.js";
 import { upload } from "../middleware/multer.js";
 import { cloudinary } from "../config/cloudinary.js";
 import { generatePreview } from "../Services/OpenAI.js";
+import Log from "../models/logModel.js";
 
 export const createPrompt = async (req, res) => {
   try {
@@ -35,13 +36,23 @@ export const createPrompt = async (req, res) => {
       user: req.user.id,
     });
     const newPrompt = await createPrompt.save();
+    try {
+      await Log.create({
+        user: req.user.id,
+        action: "PROMPT_CREATED",
+        ipAddress: req.ip,
+        details: { promptId: newPrompt._id },
+      });
+    } catch (e) {
+      console.error("Failed to log created prompt", e.stack);
+    }
     return res.status(201).json({
       message: "New prompt created successfully and is pending approval",
       prompt: newPrompt,
     });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 
@@ -71,7 +82,7 @@ export const updatePrompt = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);
     if (!prompt) {
-      return res.status(404).json("Prompt not found");
+      return res.status(404).json({ message: "Prompt not found" });
     }
     if (prompt.user.toString() !== req.user.id) {
       return res
@@ -83,7 +94,6 @@ export const updatePrompt = async (req, res) => {
       "body",
       "price",
       "category",
-      "thumbnail",
       "sampleInput",
     ];
     const requestedUpdates = Object.keys(req.body);
@@ -94,12 +104,22 @@ export const updatePrompt = async (req, res) => {
     });
     prompt.status = "pending";
     const updatedPrompt = await prompt.save();
+    try {
+      await Log.create({
+        user: req.user.id,
+        action: "PROMPT_UPDATED",
+        ipAddress: req.ip,
+        details: { promptId: updatedPrompt._id },
+      });
+    } catch (e) {
+      console.error("Failed to log prompt update", e.stack);
+    }
     res
       .status(200)
       .json({ message: "Prompt updated successfully", prompt: updatedPrompt });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 
@@ -107,7 +127,7 @@ export const deletePrompts = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);
     if (!prompt) {
-      return res.status(404).json("Prompt not found");
+      return res.status(404).json({ message: "Prompt not found" });
     }
     if (prompt.user.toString() !== req.user.id) {
       return res
@@ -116,13 +136,23 @@ export const deletePrompts = async (req, res) => {
     }
     const promptId = prompt.thumbnail.public_id;
     if (promptId) {
-      await cloudinary.uploader.destroy(publicId);
+      await cloudinary.uploader.destroy(promptId);
     }
     const removePrompt = await Prompt.findByIdAndDelete(req.params.id);
+    try {
+      await Log.create({
+        user: req.user.id,
+        action: "PROMPT_DELETED",
+        ipAddress: req.ip,
+        details: { promptId: removePrompt._id },
+      });
+    } catch (e) {
+      console.error("Failed to log prompt deletion", e.stack);
+    }
     res.status(200).json({ message: "Prompt deleted successfully" });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 
@@ -131,7 +161,7 @@ export const updatePropmtStatus = async (req, res) => {
     const { status } = req.body;
     const prompt = await Prompt.findById(req.params.id);
     if (!prompt) {
-      return res.status(404).json("Prompt not found!");
+      return res.status(404).json({ message: "Prompt not found!" });
     }
     const allowedStatuses = ["approved", "rejected"];
 
@@ -140,13 +170,23 @@ export const updatePropmtStatus = async (req, res) => {
     }
     prompt.status = status;
     const updatedPrompt = await prompt.save();
+    try {
+      await Log.create({
+        user: req.user.id,
+        action: "PROMPT_STATUS_UPDATED",
+        ipAddress: req.ip,
+        details: { promptId: updatedPrompt._id },
+      });
+    } catch (e) {
+      console.error("Failed to log prompt update", e.stack);
+    }
     res.status(200).json({
       message: "Prompt status got updated.",
       Prompt: updatedPrompt,
     });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 

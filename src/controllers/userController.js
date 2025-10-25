@@ -1,11 +1,6 @@
-import dotenv from "dotenv";
-dotenv.config();
 import User from "../models/userModel.js";
-import Prompt from "../models/promptModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import protect from "../middleware/auth.js";
-import adminAuth from "../middleware/admin.js";
 import Log from "../models/logModel.js";
 
 export const userRegister = async (req, res) => {
