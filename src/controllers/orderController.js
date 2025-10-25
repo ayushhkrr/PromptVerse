@@ -126,3 +126,20 @@ export const createCheckoutSession = async (req, res) => {
     res.status(500).json({ message: "Server error!" });
   }
 };
+
+export const getMyPurchasedPrompt = async (req, res) => {
+  try {
+    const purchasedPrompt = await Order.find({ user: req.user.id }).populate(
+      "prompt"
+    );
+    if (purchasedPrompt.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "You have not purchased any prompt yet!" });
+    }
+    res.status(200).json({ Prompts: purchasedPrompt });
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500).json({ message: "Server Error!" });
+  }
+};
