@@ -16,9 +16,9 @@ app.post(
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use("/api/users", userRoutes);
-app.use("/api/prompts", promptRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/prompts", promptRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 const startServer = async () => {
   await connectdb();

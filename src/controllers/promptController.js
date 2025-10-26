@@ -6,12 +6,21 @@ import Log from "../models/logModel.js";
 
 export const createPrompt = async (req, res) => {
   try {
-    const { title, price, body, category, sampleInput } = req.body;
+    const { title, price, body, category, sampleInput, description, tags } =
+      req.body;
 
-    if (!title || !price || !body || !category || !sampleInput) {
+    if (
+      !title ||
+      !price ||
+      !body ||
+      !category ||
+      !sampleInput ||
+      !description ||
+      !tags
+    ) {
       return res.status(400).json({
         message:
-          "Title, price, body, sampleInput and category are required fields.",
+          "Title, price, body, sampleInput, description and category are required fields.",
       });
     }
 
@@ -23,6 +32,7 @@ export const createPrompt = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "Thumbnail image is required" });
     }
+    const tagsArray = tags ? tags.split(",").map((tag) => tag.trim()) : [];
     const createPrompt = new Prompt({
       title,
       price,
@@ -33,6 +43,8 @@ export const createPrompt = async (req, res) => {
       body,
       sampleInput,
       category,
+      description,
+      tags: tagsArray,
       user: req.user.id,
     });
     const newPrompt = await createPrompt.save();
@@ -69,7 +81,7 @@ export const getPrompts = async (req, res) => {
 export const allApprovedPrompts = async (req, res) => {
   try {
     const prompts = await Prompt.find({ status: "approved" }).select(
-      "title price thumbnail sampleInput category"
+      "title price thumbnail sampleInput category description"
     );
     res.status(200).json(prompts);
   } catch (e) {
@@ -95,11 +107,17 @@ export const updatePrompt = async (req, res) => {
       "price",
       "category",
       "sampleInput",
+      "description",
+      "tags",
     ];
     const requestedUpdates = Object.keys(req.body);
     requestedUpdates.forEach((updateKey) => {
       if (allowedUpdates.includes(updateKey)) {
-        prompt[updateKey] = req.body[updateKey];
+        if (updateKey === "tags" && typeof req.body.tags === "string") {
+          prompt.tags = req.body.tags.split(",").map((tag) => tag.trim());
+        } else {
+          prompt[updateKey] = req.body[updateKey];
+        }
       }
     });
     prompt.status = "pending";

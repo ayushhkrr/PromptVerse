@@ -52,6 +52,18 @@ const promptSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    description: {
+      type: String,
+      required: [true, "A description is required"],
+      trim: true,
+      maxlength: [500, "Description cannot exceed 500 characters"],
+    },
+    tags: {
+      type: [String],
+      index: true,
+      set: (tags) =>
+        Array.isArray(tags) ? tags.map((tag) => tag.toLowercase().trim()) : [],
+    },
   },
   { timestamps: true }
 );
