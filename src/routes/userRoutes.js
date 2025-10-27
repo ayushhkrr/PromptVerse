@@ -17,9 +17,9 @@ routes.post("/register", userRegister);
 
 routes.post("/login", userLogin);
 
-routes.patch(":id", protect, userUpdate);
+routes.patch("/:id", protect, userUpdate);
 
-routes.patch("become-seller", protect, becomeSeller);
+routes.patch("/become-seller", protect, becomeSeller);
 
 routes.delete("/:id", protect, userDelete);
 

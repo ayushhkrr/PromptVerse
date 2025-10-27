@@ -22,9 +22,13 @@ export const userRegister = async (req, res) => {
     });
     const savedUser = await newUser.save();
 
-    const token = jwt.sign({ id: savedUser._id }, process.env.SECRET_KEY, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: savedUser._id, role: savedUser.role },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
     try {
       await Log.create({
         user: savedUser._id,
@@ -63,9 +67,13 @@ export const userLogin = async (req, res) => {
     if (!checkPassword) {
       return res.status(401).json({ message: "invalid credentials" });
     }
-    const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: "1h",
+      }
+    );
     try {
       await Log.create({
         user: user._id,
@@ -194,6 +202,14 @@ export const becomeSeller = async (req, res) => {
     }
     user.role = "seller";
     const updatedRole = await user.save();
+    const newToken = jwt.sign(
+      {
+        id: updatedRole._id,
+        role: updatedRole.role,
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" }
+    );
     try {
       await Log.create({
         user: updatedRole._id,

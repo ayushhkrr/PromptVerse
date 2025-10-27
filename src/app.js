@@ -9,7 +9,7 @@ import { handleStripeWebhook } from "./controllers/orderController.js";
 
 const app = express();
 app.post(
-  "/api/orders/webhook",
+  "/api/v1/orders/webhook",
   express.raw({ type: "application/json" }),
   handleStripeWebhook
 );

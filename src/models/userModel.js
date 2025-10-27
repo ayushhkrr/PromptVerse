@@ -51,8 +51,8 @@ const userSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Active", "Banned", "Deleted"],
-      default: "Active",
+      enum: ["active", "banned", "deleted"],
+      default: "active",
     },
   },
   { timestamps: true }
@@ -73,7 +73,7 @@ userSchema.pre("save", function (next) {
 
 userSchema.pre("findOneAndDelete", async function (next) {
   try {
-    const user = await this.model.findOne(getFilter());
+    const user = await this.model.findOne(this.getFilter());
     await Prompt.deleteMany({ user: user._id });
     next();
   } catch (e) {

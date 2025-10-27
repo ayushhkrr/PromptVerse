@@ -174,7 +174,7 @@ export const deletePrompts = async (req, res) => {
   }
 };
 
-export const updatePropmtStatus = async (req, res) => {
+export const updatePromptStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const prompt = await Prompt.findById(req.params.id);

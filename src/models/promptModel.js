@@ -62,7 +62,7 @@ const promptSchema = new mongoose.Schema(
       type: [String],
       index: true,
       set: (tags) =>
-        Array.isArray(tags) ? tags.map((tag) => tag.toLowercase().trim()) : [],
+        Array.isArray(tags) ? tags.map((tag) => tag.toLowerCase().trim()) : [],
     },
   },
   { timestamps: true }
