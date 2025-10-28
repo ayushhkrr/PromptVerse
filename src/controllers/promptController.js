@@ -74,7 +74,7 @@ export const getPrompts = async (req, res) => {
     res.status(200).json(prompts);
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 
@@ -103,7 +103,7 @@ export const allApprovedPrompts = async (req, res) => {
     ]);
     const totalPages = Math.ceil(totalPrompts / limit);
     res.status(200).json({
-      message: "Approved prompts fetched successfuly",
+      message: "Approved prompts fetched successfully",
       data: prompts,
       pagination: {
         currentPage: page,
@@ -114,7 +114,7 @@ export const allApprovedPrompts = async (req, res) => {
     });
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    res.status(500).json({ message: "Server error!" });
   }
 };
 
@@ -127,7 +127,7 @@ export const updatePrompt = async (req, res) => {
     if (prompt.user.toString() !== req.user.id) {
       return res
         .status(403)
-        .json({ warning: "User not authorized to update prompt" });
+        .json({ message: "User not authorized to update prompt" });
     }
     const allowedUpdates = [
       "title",
@@ -178,7 +178,7 @@ export const deletePrompts = async (req, res) => {
     if (prompt.user.toString() !== req.user.id) {
       return res
         .status(403)
-        .json({ Forbidden: "User not authorized to delete the prompt" });
+        .json({ message: "User not authorized to delete the prompt" });
     }
     const promptId = prompt.thumbnail.public_id;
     if (promptId) {

@@ -65,7 +65,7 @@ export const userLogin = async (req, res) => {
     }
     const checkPassword = bcrypt.compareSync(req.body.password, user.password);
     if (!checkPassword) {
-      return res.status(401).json({ message: "invalid credentials" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -120,12 +120,12 @@ export const userUpdate = async (req, res) => {
         ipAddress: req.ip,
       });
     } catch (e) {
-      console.error("Failed to log the registration", e.stack);
+      console.error("Failed to log user update", e.stack);
     }
 
     updatedUser.password = undefined;
     return res.status(200).json({
-      message: "User updated succesfully",
+      message: "User updated successfully",
       user: updatedUser,
     });
   } catch (e) {
@@ -154,7 +154,7 @@ export const userDelete = async (req, res) => {
     } catch (e) {
       console.error("Failed to log user deletion", e.stack);
     }
-    return res.status(200).json({ message: "User got deleted" });
+    return res.status(200).json({ message: "User deleted successfully" });
   } catch (e) {
     console.error(e.stack);
     res.status(500).json({ message: "Server error!" });
@@ -183,7 +183,7 @@ export const statusUpdate = async (req, res) => {
         details: { updatedBy: req.user.id },
       });
     } catch (e) {
-      console.error("Failed to log user deletion", e.stack);
+      console.error("Failed to log user status update", e.stack);
     }
     res.status(200).json({ message: "User status updated successfully", user });
   } catch (e) {

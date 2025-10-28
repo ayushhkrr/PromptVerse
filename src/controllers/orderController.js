@@ -41,7 +41,7 @@ const createOrder = async (session) => {
         },
       });
     } catch (e) {
-      console.error("Failed to log prompt update", e.stack);
+      console.error("Failed to log order placement", e.stack);
     }
   } catch (e) {
     console.error("Error fulfilling the order", e);
@@ -72,7 +72,7 @@ export const handleStripeWebhook = async (req, res) => {
       );
     }
   } else {
-    console.error(`Webhook received: Unhandled event type ${event.type}`);
+    console.log(`Webhook received: Unhandled event type ${event.type}`);
   }
 
   res.status(200).json({ received: true });
