@@ -80,10 +80,38 @@ export const getPrompts = async (req, res) => {
 
 export const allApprovedPrompts = async (req, res) => {
   try {
-    const prompts = await Prompt.find({ status: "approved" }).select(
-      "title price thumbnail sampleInput category description"
-    );
-    res.status(200).json(prompts);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const tag = req.query.tag;
+    const skip = (page - 1) * limit;
+    let filter = { status: "approved" };
+
+    if (tag) {
+      filter.tags = tag.toLowerCase();
+    }
+
+    const [prompts, totalPrompts] = await Promise.all([
+      Prompt.find(filter)
+        .select(
+          "title price description tags sampleInput thumbnail category createdAt"
+        )
+        .toSorted({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Prompt.countDocuments(filter),
+    ]);
+    const totalPages = Math.ceil(totalPrompts / limit);
+    res.status(200).json({
+      message: "Approved prompts fetched successfuly",
+      data: prompts,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalPrompts,
+        limit,
+      },
+    });
   } catch (e) {
     console.error(e.stack);
     res.status(500).json("Server error!");
