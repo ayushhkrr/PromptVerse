@@ -32,5 +32,3 @@ export const generatePreview = async (promptBody, sampleInput, promptType) => {
     throw new Error("Failed to generate AI preview");
   }
 };
-
-export { generatePreview };

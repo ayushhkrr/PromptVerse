@@ -223,6 +223,7 @@ export const becomeSeller = async (req, res) => {
     updatedRole.password = undefined;
     res.status(200).json({
       message: "Congratulations! You became a seller.",
+      token: newToken,
       user: updatedRole,
     });
   } catch (e) {

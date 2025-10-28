@@ -27,7 +27,7 @@ const promptSchema = new mongoose.Schema(
     promptType: {
       type: String,
       enum: ["text", "image"],
-      required: [true, "Prompt type is required (text or image)"],
+      required: [true, "the type of prompt is required"],
     },
     status: {
       type: String,

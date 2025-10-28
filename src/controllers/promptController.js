@@ -6,8 +6,16 @@ import Log from "../models/logModel.js";
 
 export const createPrompt = async (req, res) => {
   try {
-    const { title, price, body, category, sampleInput, description, tags } =
-      req.body;
+    const {
+      title,
+      price,
+      body,
+      category,
+      sampleInput,
+      description,
+      tags,
+      promptType,
+    } = req.body;
 
     if (
       !title ||
@@ -16,11 +24,18 @@ export const createPrompt = async (req, res) => {
       !category ||
       !sampleInput ||
       !description ||
-      !tags
+      !tags ||
+      !promptType
     ) {
       return res.status(400).json({
         message:
-          "Title, price, body, sampleInput, description and category are required fields.",
+          "Title, price, body, sampleInput, description, tags, promptType and category are required fields.",
+      });
+    }
+
+    if (!body.includes("{INPUT}")) {
+      return res.status(400).json({
+        message: "Prompt body must contain the {INPUT} placeholder for preview",
       });
     }
 
@@ -43,6 +58,7 @@ export const createPrompt = async (req, res) => {
       body,
       sampleInput,
       category,
+      promptType,
       description,
       tags: tagsArray,
       user: req.user.id,
@@ -124,7 +140,8 @@ export const updatePrompt = async (req, res) => {
     if (!prompt) {
       return res.status(404).json({ message: "Prompt not found" });
     }
-    if (prompt.user.toString() !== req.user.id) {
+
+    if (prompt.user.toString() !== req.user.id.toString()) {
       return res
         .status(403)
         .json({ message: "User not authorized to update prompt" });
@@ -137,6 +154,7 @@ export const updatePrompt = async (req, res) => {
       "sampleInput",
       "description",
       "tags",
+      "promptType",
     ];
     const requestedUpdates = Object.keys(req.body);
     requestedUpdates.forEach((updateKey) => {
@@ -148,6 +166,12 @@ export const updatePrompt = async (req, res) => {
         }
       }
     });
+    if (!prompt.body || !prompt.body.includes("{INPUT}")) {
+      return res.status(400).json({
+        message:
+          "Prompt body must contain the {INPUT} placeholder for previews.",
+      });
+    }
     prompt.status = "pending";
     const updatedPrompt = await prompt.save();
     try {
