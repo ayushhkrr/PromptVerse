@@ -54,6 +54,9 @@ const userSchema = new mongoose.Schema(
       enum: ["active", "banned", "deleted"],
       default: "active",
     },
+    googleId: {
+      type: String
+    },
   },
   { timestamps: true }
 );
