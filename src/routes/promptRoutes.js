@@ -23,7 +23,9 @@ routes.get("/myprompts", protect, getPrompts);
 routes.delete("/:id", protect, deletePrompts);
 
 routes.patch("/:id/status", protect, adminAuth, updatePromptStatus);
+
 routes.patch("/:id", protect, updatePrompt);
+
 routes.get("/:id/preview", getPromptPreview);
 
 export default routes;

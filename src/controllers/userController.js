@@ -140,7 +140,8 @@ export const userDelete = async (req, res) => {
     if (!user) {
       return res.status(404).json("User not found");
     }
-    if (req.user.id !== req.params.id) {
+
+    if (req.user.id.toString() !== req.params.id) {
       return res.status(403).json({ Forbidden: "User not authorized" });
     }
     const deletedUser = await User.findByIdAndDelete(req.params.id);

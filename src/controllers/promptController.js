@@ -199,7 +199,7 @@ export const deletePrompts = async (req, res) => {
     if (!prompt) {
       return res.status(404).json({ message: "Prompt not found" });
     }
-    if (prompt.user.toString() !== req.user.id) {
+    if (prompt.user.toString() !== req.user.id.toString()) {
       return res
         .status(403)
         .json({ message: "User not authorized to delete the prompt" });
