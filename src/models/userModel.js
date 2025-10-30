@@ -36,7 +36,12 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required"],
+      required: [
+        function () {
+          return !this.googleId;
+        },
+        "Password is required",
+      ],
       minlength: [8, "Password must be at least 8 characters long"],
       validate: {
         validator: validator.isStrongPassword,
@@ -55,7 +60,11 @@ const userSchema = new mongoose.Schema(
       default: "active",
     },
     googleId: {
-      type: String
+      type: String,
+    },
+    profileImage: {
+      type: String,
+      default: "",
     },
   },
   { timestamps: true }

@@ -7,6 +7,8 @@ import promptRoutes from "./routes/promptRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import { handleStripeWebhook } from "./controllers/orderController.js";
 import cors from "cors";
+import passport from "passport";
+import "./config/googleAuth.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +18,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(passport.initialize());
 
 app.post(
   "/api/v1/orders/webhook",
