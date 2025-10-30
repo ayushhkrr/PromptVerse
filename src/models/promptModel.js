@@ -20,10 +20,6 @@ const promptSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    category: {
-      type: String, //(in which category the prompt falls ex:- ChatGpt , midjourney)
-      required: true,
-    },
     promptType: {
       type: String,
       enum: ["text", "image"],
@@ -68,6 +64,6 @@ const promptSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Prompt = mongoose.model("Prompts", promptSchema);
+const Prompt = mongoose.model("Prompt", promptSchema);
 
 export default Prompt;

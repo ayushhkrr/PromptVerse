@@ -10,7 +10,6 @@ export const createPrompt = async (req, res) => {
       title,
       price,
       body,
-      category,
       sampleInput,
       description,
       tags,
@@ -21,7 +20,6 @@ export const createPrompt = async (req, res) => {
       !title ||
       !price ||
       !body ||
-      !category ||
       !sampleInput ||
       !description ||
       !tags ||
@@ -29,7 +27,7 @@ export const createPrompt = async (req, res) => {
     ) {
       return res.status(400).json({
         message:
-          "Title, price, body, sampleInput, description, tags, promptType and category are required fields.",
+          "Title, price, body, sampleInput, description, tags, and promptType are required fields.",
       });
     }
 
@@ -57,7 +55,6 @@ export const createPrompt = async (req, res) => {
       },
       body,
       sampleInput,
-      category,
       promptType,
       description,
       tags: tagsArray,
@@ -110,9 +107,9 @@ export const allApprovedPrompts = async (req, res) => {
     const [prompts, totalPrompts] = await Promise.all([
       Prompt.find(filter)
         .select(
-          "title price description tags sampleInput thumbnail category createdAt"
+          "title price description tags sampleInput thumbnail createdAt"
         )
-        .toSorted({ createdAt: -1 })
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
       Prompt.countDocuments(filter),
@@ -150,7 +147,6 @@ export const updatePrompt = async (req, res) => {
       "title",
       "body",
       "price",
-      "category",
       "sampleInput",
       "description",
       "tags",
