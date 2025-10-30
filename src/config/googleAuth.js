@@ -1,5 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
 import User from "../models/userModel.js";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";

@@ -1,5 +1,3 @@
-import dotenv from "dotenv";
-dotenv.config();
 import Prompt from "../models/promptModel.js";
 import Stripe from "stripe";
 import Order from "../models/orderModel.js";

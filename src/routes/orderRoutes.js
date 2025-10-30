@@ -8,8 +8,6 @@ import {
 
 const routes = express.Router();
 
-routes.post("/webhook", handleStripeWebhook);
-
 routes.get("/prompts", protect, getMyPurchasedPrompt);
 
 routes.post("/checkout/:id", protect, createCheckoutSession);
