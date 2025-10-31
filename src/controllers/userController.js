@@ -2,6 +2,7 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Log from "../models/logModel.js";
+import Prompt from '../models/promptModel.js'
 
 export const userRegister = async (req, res) => {
   const { fullName, username, email, password } = req.body;
@@ -232,3 +233,21 @@ export const becomeSeller = async (req, res) => {
     res.status(500).json({ message: "Server error!" });
   }
 };
+
+export const userProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    const prompts = await Prompt.find({user: user._id})
+    if (!user) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+    
+    res.status(200).json({
+      user,
+      prompts
+    })
+  }catch (e) {
+    console.error(e.stack);
+    res.status(500).json({ message: "Server error!" });
+  }
+}

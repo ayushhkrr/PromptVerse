@@ -9,6 +9,7 @@ import {
   userDelete,
   statusUpdate,
   becomeSeller,
+  userProfile
 } from "../controllers/userController.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
@@ -20,6 +21,8 @@ routes.post("/register", userRegister);
 routes.post("/login", userLogin);
 
 routes.patch("/become-seller", protect, becomeSeller);
+
+routes.get('/profile', protect, userProfile)
 
 routes.patch("/:id", protect, userUpdate);
 
