@@ -177,6 +177,6 @@ This project showcases proficiency in:
 
 ## License 📄
 
-This project is open source and available for educational purposes.
+This project is open source and available for educational purposes so anyone can use this.
 
 ---
