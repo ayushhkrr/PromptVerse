@@ -44,25 +44,28 @@ function MyPrompts() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-500/20 border border-green-500/50 text-green-300';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'bg-yellow-500/20 border border-yellow-500/50 text-yellow-300';
       case 'rejected':
-        return 'bg-red-100 text-red-700';
+        return 'bg-red-500/20 border border-red-500/50 text-red-300';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-gray-500/20 border border-gray-500/50 text-gray-300';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
         <Navbar />
         <div className="pt-24 flex justify-center items-center h-screen">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-            className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full"
+            className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full"
           />
         </div>
       </div>
@@ -70,10 +73,15 @@ function MyPrompts() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 relative overflow-hidden">
+      {/* Animated Background Blobs */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+      <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
+
       <Navbar />
 
-      <div className="pt-24 pb-12">
+      <div className="relative z-10 pt-24 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -81,10 +89,10 @@ function MyPrompts() {
             className="flex justify-between items-center mb-8"
           >
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 My Prompts
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="text-gray-300 mt-2">
                 Manage your listed prompts
               </p>
             </div>
@@ -92,7 +100,7 @@ function MyPrompts() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/create-prompt')}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg font-semibold"
+              className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow-lg font-semibold hover:shadow-xl transition-all"
             >
               + Create New Prompt
             </motion.button>
@@ -102,7 +110,7 @@ function MyPrompts() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-8"
+              className="backdrop-blur-md bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-8"
             >
               {error}
             </motion.div>
@@ -112,20 +120,20 @@ function MyPrompts() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="bg-white rounded-2xl shadow-lg p-12 text-center"
+              className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl shadow-xl p-12 text-center"
             >
               <div className="text-6xl mb-4">✨</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              <h2 className="text-2xl font-bold text-white mb-2">
                 No prompts yet
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-300 mb-6">
                 Create your first prompt and start earning
               </p>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate('/create-prompt')}
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-lg"
+                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all"
               >
                 Create Prompt
               </motion.button>
@@ -138,7 +146,7 @@ function MyPrompts() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow"
+                  className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-shadow"
                 >
                   {/* Thumbnail */}
                   <div className="relative h-48 bg-gradient-to-br from-blue-400 to-purple-500">
@@ -163,15 +171,15 @@ function MyPrompts() {
 
                   {/* Content */}
                   <div className="p-5">
-                    <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-1">
+                    <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
                       {prompt.title}
                     </h3>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    <p className="text-gray-300 text-sm mb-4 line-clamp-2">
                       {prompt.description}
                     </p>
 
                     {/* Stats */}
-                    <div className="flex justify-between items-center mb-4 text-sm text-gray-600">
+                    <div className="flex justify-between items-center mb-4 text-sm text-gray-300">
                       <div className="flex items-center space-x-1">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
@@ -193,7 +201,7 @@ function MyPrompts() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => navigate(`/edit-prompt/${prompt._id}`)}
-                        className="flex-1 px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors"
+                        className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-xl hover:shadow-lg transition-all"
                       >
                         Edit
                       </motion.button>
@@ -201,7 +209,7 @@ function MyPrompts() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleDelete(prompt._id)}
-                        className="flex-1 px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors"
+                        className="flex-1 px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white text-sm rounded-xl hover:shadow-lg transition-all"
                       >
                         Delete
                       </motion.button>

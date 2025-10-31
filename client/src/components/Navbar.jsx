@@ -40,7 +40,7 @@ function Navbar() {
           <div className="flex items-center space-x-4">
             {isAuthenticated ? (
               <>
-                <Link to="/browse">
+                <Link to="/home">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -62,7 +62,7 @@ function Navbar() {
                   </Link>
                 )}
 
-                {(user?.role === 'seller' || user?.role === 'admin') && (
+                {(user?.isSeller || user?.role === 'admin') && (
                   <Link to="/my-prompts">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
@@ -84,7 +84,7 @@ function Navbar() {
                   </motion.button>
                 </Link>
 
-                {user?.role === 'user' && (
+                {!user?.isSeller && user?.role !== 'admin' && (
                   <Link to="/become-seller">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
