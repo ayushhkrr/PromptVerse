@@ -64,6 +64,19 @@ export const userLogin = async (req, res) => {
     if (!user) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
+
+    // Validate password exists before comparing
+    if (!user.password) {
+      // If no password but has googleId, it's a Google-only account
+      if (user.googleId) {
+        return res.status(400).json({
+          message: "This account is linked to Google. Please use Google Sign-In."
+        });
+      }
+      // Otherwise it's an invalid account state
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
     const checkPassword = bcrypt.compareSync(req.body.password, user.password);
     if (!checkPassword) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -241,7 +254,7 @@ export const userProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found!" });
     }
-    
+
     res.status(200).json({
       user,
       prompts
@@ -251,3 +264,4 @@ export const userProfile = async (req, res) => {
     res.status(500).json({ message: "Server error!" });
   }
 }
+

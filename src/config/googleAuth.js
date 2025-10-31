@@ -23,27 +23,36 @@ passport.use(
 
         let user = await User.findOne({ googleId });
         if (user) {
-          console.log("User found:", user);
-          done(null, user);
-        } else {
-          user = await User.findOne({ email });
-          if (user) {
-            user.googleId = googleId;
-            user.profileImage = photo || user.profileImage;
-            await user.save();
-            console.log("Existing user linked:", user);
-            done(null, user);
-          } else {
-            const newUser = await User.create({
-              googleId,
-              fullName: profile.displayName,
-              email,
-              profileImage: photo,
-            });
-            console.log("New user created:", newUser);
-            done(null, newUser);
+          console.log("User found by googleId:", user);
+          return done(null, user);
+        }
+
+        // Check if user exists with this email
+        user = await User.findOne({ email });
+        if (user) {
+          // Check if this is a password-based account (no googleId)
+          if (!user.googleId && user.password) {
+            // User registered with email/password, don't auto-link
+            console.log("User exists with password-based account");
+            return done(new Error("An account with this email already exists. Please sign in with your email and password."), null);
+          }
+
+          // If user has googleId but we didn't find them above, link the account
+          if (user.googleId) {
+            console.log("User found by email with googleId:", user);
+            return done(null, user);
           }
         }
+
+        // Create new user
+        const newUser = await User.create({
+          googleId,
+          fullName: profile.displayName,
+          email,
+          profileImage: photo,
+        });
+        console.log("New user created:", newUser);
+        done(null, newUser);
       } catch (e) {
         console.error("Error in google strategy:", e.stack);
         done(e, null);

@@ -9,7 +9,7 @@ import {
   userDelete,
   statusUpdate,
   becomeSeller,
-  userProfile
+  userProfile,
 } from "../controllers/userController.js";
 import passport from "passport";
 import jwt from "jsonwebtoken";
