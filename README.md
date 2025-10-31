@@ -175,4 +175,8 @@ This project showcases proficiency in:
 
 ---
 
-_(Optionally, add your name/contact info here)_
+## License 📄
+
+This project is open source and available for educational purposes.
+
+---
