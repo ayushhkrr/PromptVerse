@@ -57,9 +57,14 @@ passport.use(
           counter++;
         }
 
+        // Ensure fullName meets minimum length requirement (4 chars)
+        const fullName = profile.displayName && profile.displayName.length >= 4
+          ? profile.displayName
+          : username.padEnd(4, '0');
+
         const newUser = await User.create({
           googleId,
-          fullName: profile.displayName,
+          fullName,
           email,
           username,
           profileImage: photo,
