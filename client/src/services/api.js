@@ -70,8 +70,12 @@ export const promptAPI = {
   getPromptPreview: (promptId) => api.get(`/prompts/${promptId}/preview`),
   
   // Update prompt status (admin only)
-  updatePromptStatus: (promptId, status) => 
+  updatePromptStatus: (promptId, status) =>
     api.patch(`/prompts/${promptId}/status`, { status }),
+
+  // Get all prompts (admin only)
+  getAllPromptsAdmin: (page = 1, limit = 100) =>
+    api.get('/prompts/admin/all', { params: { page, limit } }),
 };
 
 export const orderAPI = {

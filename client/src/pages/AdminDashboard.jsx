@@ -20,7 +20,7 @@ function AdminDashboard() {
       setLoading(true);
       const [statsRes, promptsRes] = await Promise.all([
         adminAPI.getStats(),
-        promptAPI.getAllPrompts(1, 100)
+        promptAPI.getAllPromptsAdmin(1, 100)
       ]);
       setStats(statsRes.data);
       setPrompts(promptsRes.data.prompts || []);

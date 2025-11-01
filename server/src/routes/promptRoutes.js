@@ -6,6 +6,7 @@ import {
   updatePrompt,
   getPrompts,
   allApprovedPrompts,
+  getAllPromptsAdmin,
   deletePrompts,
   updatePromptStatus,
   getPromptPreview,
@@ -15,6 +16,8 @@ import express from "express";
 const routes = express.Router();
 
 routes.get("/", allApprovedPrompts);
+
+routes.get("/admin/all", protect, adminAuth, getAllPromptsAdmin);
 
 routes.post("/create", protect, upload.single("thumbnail"), createPrompt);
 

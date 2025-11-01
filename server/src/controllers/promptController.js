@@ -131,6 +131,38 @@ export const allApprovedPrompts = async (req, res) => {
   }
 };
 
+export const getAllPromptsAdmin = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 100;
+    const skip = (page - 1) * limit;
+
+    const [prompts, totalPrompts] = await Promise.all([
+      Prompt.find()
+        .populate('user', 'fullName email username')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Prompt.countDocuments(),
+    ]);
+
+    const totalPages = Math.ceil(totalPrompts / limit);
+    res.status(200).json({
+      message: "All prompts fetched successfully",
+      prompts: prompts,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalPrompts,
+        limit,
+      },
+    });
+  } catch (e) {
+    console.error(e.stack);
+    res.status(500).json({ message: "Server error!" });
+  }
+};
+
 export const updatePrompt = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);
