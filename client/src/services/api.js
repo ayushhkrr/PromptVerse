@@ -90,9 +90,13 @@ export const orderAPI = {
 export const adminAPI = {
   // Get platform stats
   getStats: () => api.get('/users/stats'),
-  
+
+  // Get all users (admin only)
+  getAllUsers: (page = 1, limit = 100) =>
+    api.get('/users/admin/all', { params: { page, limit } }),
+
   // Update user status
-  updateUserStatus: (userId, status) => 
+  updateUserStatus: (userId, status) =>
     api.patch(`/users/${userId}/status`, { status }),
 };
 

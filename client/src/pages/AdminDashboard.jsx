@@ -6,6 +6,7 @@ import { adminAPI, promptAPI } from '../services/api';
 function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [prompts, setPrompts] = useState([]);
+  const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState('stats');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -18,15 +19,18 @@ function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const [statsRes, promptsRes] = await Promise.all([
+      const [statsRes, promptsRes, usersRes] = await Promise.all([
         adminAPI.getStats(),
-        promptAPI.getAllPromptsAdmin(1, 100)
+        promptAPI.getAllPromptsAdmin(1, 100),
+        adminAPI.getAllUsers(1, 100)
       ]);
       setStats(statsRes.data);
       setPrompts(promptsRes.data.prompts || []);
+      setUsers(usersRes.data.users || []);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch dashboard data');
       setPrompts([]);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -326,7 +330,7 @@ function AdminDashboard() {
               animate={{ opacity: 1 }}
               className="space-y-4"
             >
-              {!stats?.users || stats.users.length === 0 ? (
+              {users.length === 0 ? (
                 <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl shadow-xl p-12 text-center">
                   <div className="text-6xl mb-4">👥</div>
                   <h2 className="text-2xl font-bold text-white mb-2">
@@ -337,7 +341,7 @@ function AdminDashboard() {
                   </p>
                 </div>
               ) : (
-                stats.users.map((user, index) => (
+                users.map((user, index) => (
                 <motion.div
                   key={user._id}
                   initial={{ opacity: 0, y: 20 }}
