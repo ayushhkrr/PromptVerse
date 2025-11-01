@@ -132,7 +132,7 @@ PromptVerse/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/PromptVerse.git
+   git clone https://github.com/ayushhkrr/PromptVerse.git
    cd PromptVerse
    ```
 
@@ -157,26 +157,26 @@ PromptVerse/
    CLIENT_URL=http://localhost:5173
 
    # Database
-   MONGO_URI=your_mongodb_connection_string
+   MONGO_URI=mongodb_connection_string
 
    # JWT Secret
-   JWT_SECRET=your_jwt_secret_key
+   JWT_SECRET=jwt_secret_key
 
    # Stripe
-   STRIPE_SECRET_KEY=your_stripe_secret_key
-   STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+   STRIPE_SECRET_KEY=stripe_secret_key
+   STRIPE_WEBHOOK_SECRET=stripe_webhook_secret
 
    # Cloudinary
-   CLOUDINARY_CLOUD_NAME=your_cloud_name
-   CLOUDINARY_API_KEY=your_api_key
-   CLOUDINARY_API_SECRET=your_api_secret
+   CLOUDINARY_CLOUD_NAME=cloud_name
+   CLOUDINARY_API_KEY=api_key
+   CLOUDINARY_API_SECRET=api_secret
 
    # OpenAI
-   OPENAI_API_KEY=your_openai_api_key
+   OPENAI_API_KEY=openai_api_key
 
    # Google OAuth (Optional)
-   GOOGLE_CLIENT_ID=your_google_client_id
-   GOOGLE_CLIENT_SECRET=your_google_client_secret
+   GOOGLE_CLIENT_ID=google_client_id
+   GOOGLE_CLIENT_SECRET=google_client_secret
    GOOGLE_CALLBACK_URL=http://localhost:5000/api/v1/users/auth/google/callback
    ```
 
@@ -326,7 +326,7 @@ This project is licensed under the ISC License.
 
 ## 👨‍💻 Author
 
-Your Name - [GitHub Profile](https://github.com/yourusername)
+Your Name - [GitHub Profile](https://github.com/ayushhkrr)
 
 ## 🙏 Acknowledgments
 
