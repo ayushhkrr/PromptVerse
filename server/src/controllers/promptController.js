@@ -292,10 +292,14 @@ export const getPromptPreview = async (req, res) => {
   try {
     const prompt = await Prompt.findById(req.params.id);
 
-    if (!prompt || prompt.status !== "approved") {
-      return res
-        .status(404)
-        .json({ message: "Prompt not found or is not approved" });
+    if (!prompt) {
+      console.error(`Prompt not found: ${req.params.id}`);
+      return res.status(404).json({ message: "Prompt not found" });
+    }
+
+    if (prompt.status !== "approved") {
+      console.error(`Prompt not approved: ${req.params.id}, status: ${prompt.status}`);
+      return res.status(403).json({ message: "Prompt is not approved yet" });
     }
 
     if (!prompt.sampleInput) {
@@ -303,17 +307,20 @@ export const getPromptPreview = async (req, res) => {
         message: "This prompt does not have a sample input for preview",
       });
     }
+
+    console.log(`Generating preview for prompt: ${prompt.title}`);
     const aiResponse = await generatePreview(
       prompt.body,
       prompt.sampleInput,
       prompt.promptType
     );
+
     res.status(200).json({
       prompt: prompt,
       preview: aiResponse,
     });
   } catch (e) {
-    console.error(e.stack);
-    res.status(500).json({ message: "Server error!" });
+    console.error('Error in getPromptPreview:', e.stack);
+    return res.status(500).json({ message: "Server error!", error: e.message });
   }
 };
