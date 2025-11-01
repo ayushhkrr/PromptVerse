@@ -7,6 +7,7 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "promptverse_thumbs",
     allowed_formats: ["jpg", "jpeg", "png"],
+    secure: true, // Ensure HTTPS URLs
   },
 });
 

@@ -1,7 +1,7 @@
 import protect from "../middleware/auth.js";
 import adminAuth from "../middleware/admin.js";
 import express from "express";
-import { getStats } from "../controllers/adminController.js";
+import { getStats, getAllUsers } from "../controllers/adminController.js";
 import {
   userRegister,
   userLogin,
@@ -31,6 +31,8 @@ routes.delete("/:id", protect, userDelete);
 routes.patch("/:id/status", protect, adminAuth, statusUpdate);
 
 routes.get("/stats", protect, adminAuth, getStats);
+
+routes.get("/admin/all", protect, adminAuth, getAllUsers);
 
 routes.get(
   "/google/auth",

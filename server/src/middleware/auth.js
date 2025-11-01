@@ -15,11 +15,11 @@ const protect = async (req, res, next) => {
 
       next();
     } else {
-      res.status(401).json("Unauthorized User!");
+      return res.status(401).json({ message: "Unauthorized User!" });
     }
   } catch (e) {
     console.error(e.stack);
-    res.status(500).json("Server error!");
+    return res.status(500).json({ message: "Server error!" });
   }
 };
 
