@@ -49,7 +49,7 @@ routes.get(
   (req, res) => {
     const token = jwt.sign(
       {
-        id: req.user.id,
+        id: req.user._id,
         role: req.user.role,
       },
       process.env.SECRET_KEY,
