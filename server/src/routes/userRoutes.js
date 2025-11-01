@@ -47,15 +47,25 @@ routes.get(
     session: false,
   }),
   (req, res) => {
-    const token = jwt.sign(
-      {
-        id: req.user._id,
-        role: req.user.role,
-      },
-      process.env.SECRET_KEY,
-      { expiresIn: "1h" }
-    );
-    res.redirect(`${process.env.CLIENT_URL}/login-success?token=${token}`);
+    try {
+      if (!req.user) {
+        console.error("No user in req.user after Google auth");
+        return res.redirect(`${process.env.CLIENT_URL}/login-failed`);
+      }
+
+      const token = jwt.sign(
+        {
+          id: req.user._id,
+          role: req.user.role,
+        },
+        process.env.SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+      res.redirect(`${process.env.CLIENT_URL}/login-success?token=${token}`);
+    } catch (error) {
+      console.error("Error in Google callback:", error);
+      res.redirect(`${process.env.CLIENT_URL}/login-failed`);
+    }
   }
 );
 
