@@ -45,10 +45,14 @@ passport.use(
         }
 
         // Create new user
+        // Generate username from email or googleId
+        const username = email ? email.split('@')[0].toLowerCase() : `user_${googleId}`;
+
         const newUser = await User.create({
           googleId,
           fullName: profile.displayName,
           email,
+          username,
           profileImage: photo,
         });
         console.log("New user created:", newUser);
