@@ -35,7 +35,10 @@ export const authAPI = {
   
   // Become seller
   becomeSeller: () => api.patch('/users/become-seller'),
-  
+
+  // Get user profile
+  getUserProfile: () => api.get('/users/profile'),
+
   // Google OAuth (redirect URL)
   googleAuth: () => `${API_URL}/users/google/auth`,
 };

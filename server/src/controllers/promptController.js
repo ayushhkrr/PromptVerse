@@ -84,7 +84,7 @@ export const createPrompt = async (req, res) => {
 export const getPrompts = async (req, res) => {
   try {
     const prompts = await Prompt.find({ user: req.user.id });
-    res.status(200).json(prompts);
+    res.status(200).json({ prompts });
   } catch (e) {
     console.error(e.stack);
     res.status(500).json({ message: "Server error!" });
@@ -117,7 +117,7 @@ export const allApprovedPrompts = async (req, res) => {
     const totalPages = Math.ceil(totalPrompts / limit);
     res.status(200).json({
       message: "Approved prompts fetched successfully",
-      data: prompts,
+      prompts: prompts,
       pagination: {
         currentPage: page,
         totalPages,
@@ -277,7 +277,7 @@ export const getPromptPreview = async (req, res) => {
       prompt.promptType
     );
     res.status(200).json({
-      promptType: prompt.promptType,
+      prompt: prompt,
       preview: aiResponse,
     });
   } catch (e) {

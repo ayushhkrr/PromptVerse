@@ -149,7 +149,7 @@ export const getMyPurchasedPrompt = async (req, res) => {
         .status(404)
         .json({ message: "You have not purchased any prompt yet!" });
     }
-    res.status(200).json({ Prompts: purchasedPrompt });
+    res.status(200).json({ prompts: purchasedPrompt });
   } catch (e) {
     console.error(e.stack);
     res.status(500).json({ message: "Server Error!" });

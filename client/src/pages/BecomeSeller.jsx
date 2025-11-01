@@ -18,9 +18,13 @@ function BecomeSeller() {
       const response = await authAPI.becomeSeller();
 
       // Update user context with new role and token
-      login(response.data.user, response.data.token);
+      const { user, token } = response.data;
+      login(user, token);
 
-      navigate('/my-prompts');
+      // Show success message
+      alert('Congratulations! You are now a seller. You can start creating prompts.');
+
+      navigate('/create-prompt');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to upgrade to seller');
     } finally {
@@ -32,58 +36,58 @@ function BecomeSeller() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Navbar />
 
-      <div className="pt-24 pb-12">
+      <div className="pt-20 sm:pt-24 pb-8 sm:pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-3xl shadow-2xl overflow-hidden"
+            className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-12 text-center">
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 sm:p-8 md:p-12 text-center">
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-6xl mb-4"
+                className="text-4xl sm:text-5xl md:text-6xl mb-3 sm:mb-4"
               >
                 🚀
               </motion.div>
-              <h1 className="text-4xl font-bold text-white mb-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
                 Become a Seller
               </h1>
-              <p className="text-xl text-blue-100">
+              <p className="text-base sm:text-lg md:text-xl text-blue-100">
                 Start earning by selling your prompts
               </p>
             </div>
 
             {/* Content */}
-            <div className="p-12">
+            <div className="p-6 sm:p-8 md:p-12">
               {error && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-8"
+                  className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg mb-6 sm:mb-8 text-sm"
                 >
                   {error}
                 </motion.div>
               )}
 
-              <div className="space-y-8 mb-12">
+              <div className="space-y-6 sm:space-y-8 mb-8 sm:mb-12">
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="flex items-start space-x-4"
+                  className="flex items-start space-x-3 sm:space-x-4"
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">✨</span>
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <span className="text-xl sm:text-2xl">✨</span>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">
                       Create and List Prompts
                     </h3>
-                    <p className="text-gray-600">
+                    <p className="text-sm sm:text-base text-gray-600">
                       Design powerful AI prompts and list them on our marketplace for others to discover and purchase.
                     </p>
                   </div>
@@ -159,11 +163,11 @@ function BecomeSeller() {
                   whileTap={{ scale: 0.95 }}
                   onClick={handleBecomeSeller}
                   disabled={loading}
-                  className="px-12 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xl font-bold rounded-xl shadow-2xl hover:shadow-3xl transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg sm:text-xl font-bold rounded-lg sm:rounded-xl shadow-2xl hover:shadow-3xl transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {loading ? 'Processing...' : 'Become a Seller Now'}
                 </motion.button>
-                <p className="text-gray-500 text-sm mt-4">
+                <p className="text-gray-500 text-xs sm:text-sm mt-3 sm:mt-4 px-4">
                   Free to join • No monthly fees • Start selling immediately
                 </p>
               </motion.div>

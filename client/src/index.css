@@ -19,3 +19,39 @@
     animation-delay: 10s;
   }
 }
+
+/* Starry Night Background */
+.starry-background {
+  background: #000000;
+  background-image:
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 60px 70px, white, transparent),
+    radial-gradient(1px 1px at 50px 50px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 90px 10px, white, transparent),
+    radial-gradient(1px 1px at 200px 150px, white, transparent),
+    radial-gradient(1px 1px at 175px 20px, white, transparent),
+    radial-gradient(2px 2px at 100px 200px, white, transparent),
+    radial-gradient(1px 1px at 300px 100px, white, transparent),
+    radial-gradient(1px 1px at 250px 250px, white, transparent),
+    radial-gradient(1px 1px at 350px 180px, white, transparent),
+    radial-gradient(2px 2px at 280px 50px, white, transparent);
+  background-size: 400px 400px;
+  background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 200px 150px,
+                       150px 50px, 250px 200px, 50px 150px, 300px 250px,
+                       100px 300px, 320px 120px, 180px 280px;
+  animation: starfield 200s linear infinite;
+}
+
+@keyframes starfield {
+  from {
+    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 200px 150px,
+                         150px 50px, 250px 200px, 50px 150px, 300px 250px,
+                         100px 300px, 320px 120px, 180px 280px;
+  }
+  to {
+    background-position: 0 400px, 40px 460px, 130px 670px, 70px 500px, 200px 550px,
+                         150px 450px, 250px 600px, 50px 550px, 300px 650px,
+                         100px 700px, 320px 520px, 180px 680px;
+  }
+}

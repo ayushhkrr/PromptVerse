@@ -20,8 +20,7 @@ function LoginSuccess() {
           email: payload.email,
           fullName: payload.fullName,
           username: payload.username,
-          role: payload.role,
-          isSeller: payload.isSeller
+          role: payload.role
         };
 
         // Save token and user

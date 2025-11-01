@@ -76,12 +76,7 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden flex items-center justify-center py-12 px-4">
-      {/* Animated Blobs */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob" />
-      <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000" />
-      <div className="absolute top-1/3 right-1/3 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
-
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 starry-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -92,10 +87,10 @@ function Register() {
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-2xl">P</span>
             </div>
-            <span className="text-3xl font-bold text-gray-900">PromptVerse</span>
+            <span className="text-3xl font-bold text-white">PromptVerse</span>
           </Link>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Create account</h2>
-          <p className="text-gray-600">Join PromptVerse today</p>
+          <h2 className="text-3xl font-bold text-white mb-2">Create account</h2>
+          <p className="text-gray-200">Join PromptVerse today</p>
         </div>
 
         <div className="backdrop-blur-md bg-white/80 border border-gray-200 rounded-3xl shadow-xl p-8">
