@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 function PromptCard({ prompt }) {
   const navigate = useNavigate();
 
+  // Debug: Log thumbnail data
+  console.log('Prompt thumbnail:', prompt.thumbnail);
+
   const handleClick = () => {
     navigate(`/prompt/${prompt._id}`);
   };
