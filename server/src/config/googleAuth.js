@@ -46,7 +46,16 @@ passport.use(
 
         // Create new user
         // Generate username from email or googleId
-        const username = email ? email.split('@')[0].toLowerCase() : `user_${googleId}`;
+        let username = email ? email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '') : `user${googleId}`;
+
+        // Ensure username is unique by checking database
+        let usernameExists = await User.findOne({ username });
+        let counter = 1;
+        while (usernameExists) {
+          username = email ? `${email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g, '')}${counter}` : `user${googleId}${counter}`;
+          usernameExists = await User.findOne({ username });
+          counter++;
+        }
 
         const newUser = await User.create({
           googleId,
