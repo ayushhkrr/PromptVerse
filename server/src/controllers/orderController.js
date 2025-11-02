@@ -95,7 +95,7 @@ export const createCheckoutSession = async (req, res) => {
         .json({ message: "Sellers cannot purchase their own prompt." });
     }
 
-    if (req.user.role === "seller") {
+    if (req.user.role === "seller" || req.user.role === 'admin') {
       return res
         .status(403)
         .json({ message: "Sellers cannot purchase prompts." });
@@ -141,15 +141,29 @@ export const createCheckoutSession = async (req, res) => {
 
 export const getMyPurchasedPrompt = async (req, res) => {
   try {
-    const purchasedPrompt = await Order.find({ user: req.user.id }).populate(
-      "prompt"
-    );
-    if (purchasedPrompt.length === 0) {
+    // const purchasedPrompt = await Order.find({ user: req.user.id }).populate(
+    //   "prompt"
+    // );
+
+    const purchasedOrders = await Order.find({ user: req.user.id })
+      .populate({
+        path: 'prompt',
+        select: 'title description body price promptType tags thumbnail purchaseCount seller',
+        populate: {
+          path: 'seller',
+          select: 'username fullName'
+        }
+      });
+    
+    if (purchasedOrders.length === 0) {
       return res
         .status(404)
         .json({ message: "You have not purchased any prompt yet!" });
     }
-    res.status(200).json({ prompts: purchasedPrompt });
+     const prompts = purchasedOrders
+      .map(order => order.prompt)
+      .filter(prompt => prompt !== null); 
+    res.status(200).json({ prompts});
   } catch (e) {
     console.error(e.stack);
     res.status(500).json({ message: "Server Error!" });
