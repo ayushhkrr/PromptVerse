@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
-import { promptAPI } from '../services/api';
+import { promptAPI, orderAPI } from '../services/api';
 import Navbar from '../components/Navbar';
 
 function Home() {
@@ -11,6 +11,11 @@ function Home() {
   const [prompts, setPrompts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState('');
+  const [purchasingId, setPurchasingId] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [currentPreview, setCurrentPreview] = useState(null);
+  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState('');
 
   const tags = ['All', 'ChatGPT', 'DALL-E', 'Writing', 'Coding', 'Marketing', 'Design'];
 
@@ -50,6 +55,50 @@ function Home() {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
+  };
+  const handlePurchase = async (e, promptId) => {
+    e.stopPropagation(); // This is CRITICAL. It stops the card's main click.
+
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+
+    try {
+      setPurchasingId(promptId); // Show loader on this specific button
+      const response = await orderAPI.createCheckout(promptId);
+      window.location.href = response.data.url; // Redirect to Stripe
+    } catch (err) {
+      console.error('Purchase failed', err);
+      alert(err.response?.data?.message || 'Failed to initiate purchase');
+      setPurchasingId(null); // Clear loader on error
+    }
+  };
+
+  const handleOpenPreview = async (e, prompt) => {
+    e.stopPropagation(); // Stop the card from navigating
+    setIsPreviewOpen(true);
+    setIsPreviewLoading(true);
+    setCurrentPreview(prompt); // Store the whole prompt object
+    setPreviewError('');
+
+    try {
+      // Call the API to get the AI-generated preview
+      const response = await promptAPI.getPromptPreview(prompt._id);
+      // Store just the preview data (text or image URL)
+      setCurrentPreview(prev => ({ ...prev, aiResult: response.data.preview }));
+    } catch (err) {
+      setPreviewError(err.response?.data?.message || 'Failed to load preview');
+    } finally {
+      setIsPreviewLoading(false);
+    }
+  };
+
+  const handleClosePreview = () => {
+    setIsPreviewOpen(false);
+    setCurrentPreview(null);
+    setIsPreviewLoading(false);
+    setPreviewError('');
   };
 
   return (
@@ -177,21 +226,46 @@ function Home() {
                 )}
 
                 {/* Footer */}
-                <div className="flex items-center justify-between pt-3 sm:pt-4 border-t border-white/10">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">
-                        {prompt.seller?.username?.[0]?.toUpperCase() || 'P'}
+                <div className="pt-3 sm:pt-4 border-t border-white/10">
+                  {/* Price and Seller */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">
+                          {prompt.seller?.username?.[0]?.toUpperCase() || 'P'}
+                        </span>
+                      </div>
+                      <span className="text-gray-300 text-xs sm:text-sm truncate max-w-[100px] sm:max-w-none">
+                        {prompt.seller?.username || 'Anonymous'}
                       </span>
                     </div>
-                    <span className="text-gray-300 text-xs sm:text-sm truncate max-w-[100px] sm:max-w-none">
-                      {prompt.seller?.username || 'Anonymous'}
-                    </span>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-xl sm:text-2xl font-bold text-white">
-                      ${prompt.price}
+                    <div className="text-right">
+                      <div className="text-xl sm:text-2xl font-bold text-white">
+                        ${prompt.price}
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 sm:gap-3">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => handleOpenPreview(e, prompt)}
+                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 text-white text-sm rounded-lg hover:bg-white/20 transition-all"
+                    
+                    >
+                      Preview
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={(e) => handlePurchase(e, prompt._id)}
+                      disabled={purchasingId === prompt._id}
+                      className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+                    >
+                      {purchasingId === prompt._id ? '...' : 'Buy'}
+                    </motion.button>
                   </div>
                 </div>
               </motion.div>
@@ -254,6 +328,72 @@ function Home() {
           </motion.div>
         )}
       </div>
+      {/* --- PASTE THE MODAL CODE HERE --- */}
+      <AnimatePresence>
+        {isPreviewOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md"
+            onClick={handleClosePreview}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white/10 border border-white/20 backdrop-blur-lg rounded-2xl p-6 sm:p-8 max-w-lg w-full text-white"
+              onClick={(e) => e.stopPropagation()} // Stop click from closing modal
+            >
+              {isPreviewLoading ? (
+                <div className="flex flex-col items-center justify-center h-64">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full"
+                  />
+                  <p className="mt-4 text-gray-300">Generating AI Preview...</p>
+                </div>
+              ) : previewError ? (
+                <div className="flex flex-col items-center justify-center h-64">
+                  <span className="text-4xl">❌</span>
+                  <h3 className="text-xl font-bold mt-4">Error</h3>
+                  <p className="text-gray-300">{previewError}</p>
+                </div>
+              ) : (
+                currentPreview && (
+                  <div>
+                    <h2 className="text-2xl font-bold mb-4">{currentPreview.title}</h2>
+                    <h3 className="text-sm font-semibold text-gray-300 uppercase mb-2">Sample Input:</h3>
+                    <p className="p-3 bg-black/20 rounded-lg text-gray-200 font-mono text-sm mb-4">
+                      {currentPreview.sampleInput}
+                    </p>
+                    
+                    <h3 className="text-sm font-semibold text-gray-300 uppercase mb-2">AI Generated Preview:</h3>
+                    <div className="p-3 bg-black/20 rounded-lg max-h-64 overflow-y-auto">
+                      {/* This logic checks the prompt type to show an image or text */}
+                      {currentPreview.promptType === 'image' ? (
+                        <img src={currentPreview.aiResult} alt="AI Preview" className="rounded-lg" />
+                      ) : (
+                        <p className="text-white whitespace-pre-wrap">{currentPreview.aiResult}</p>
+                      )}
+                    </div>
+                  </div>
+                )
+              )}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleClosePreview}
+                className="w-full mt-6 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg"
+              >
+                Close
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* --- END OF MODAL CODE --- */}
     </div>
   );
 }
