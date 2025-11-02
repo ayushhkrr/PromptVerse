@@ -148,6 +148,10 @@ export const getMyPurchasedPrompt = async (req, res) => {
     // );
     console.log('User ID from token:', req.user.id);
 
+    const userExists = await User.findById(req.user.id);
+    console.log('User exists in DB:', !!userExists);
+    
+
     const purchasedOrders = await Order.find({ user: req.user.id })
       .populate({
         path: 'prompt',
