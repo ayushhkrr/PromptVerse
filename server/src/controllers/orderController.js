@@ -128,7 +128,7 @@ export const createCheckoutSession = async (req, res) => {
       cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
 
       metadata: {
-        userId,
+        userId: userId.toString(),
         promptId,
       },
     });
