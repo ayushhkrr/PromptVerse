@@ -145,8 +145,8 @@ function Home() {
               >
                 {/* Prompt Image/Icon */}
                 <div className="w-full h-40 sm:h-48 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-lg sm:rounded-xl mb-3 sm:mb-4 flex items-center justify-center overflow-hidden">
-                  {prompt.imageUrl ? (
-                    <img src={prompt.imageUrl} alt={prompt.title} className="w-full h-full object-cover" />
+                  {prompt.thumbnail?.url ? (
+                    <img src={prompt.thumbnail.url} alt={prompt.title} className="w-full h-full object-cover" />
                   ) : (
                     <span className="text-4xl sm:text-6xl">✨</span>
                   )}

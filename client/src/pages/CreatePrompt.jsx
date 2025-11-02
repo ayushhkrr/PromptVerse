@@ -14,6 +14,7 @@ function CreatePrompt() {
     promptType: 'text',
     sampleInput: '',
     tags: '',
+    thumbnail: ''
   });
   const [thumbnail, setThumbnail] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
