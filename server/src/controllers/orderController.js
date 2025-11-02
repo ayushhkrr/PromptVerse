@@ -10,6 +10,7 @@ const createOrder = async (session) => {
   try {
     const userId = session.metadata.userId;
     const promptId = session.metadata.promptId;
+    console.log('Creating order for user:', userId);
     const prompt = await Prompt.findById(promptId);
     if (!prompt) {
       console.log(
@@ -22,6 +23,7 @@ const createOrder = async (session) => {
       prompt: promptId,
       price: prompt.price,
     });
+    console.log('Order created:', newOrder);
 
     prompt.purchaseCount = (prompt.purchaseCount || 0) + 1;
     await prompt.save();
@@ -144,6 +146,7 @@ export const getMyPurchasedPrompt = async (req, res) => {
     // const purchasedPrompt = await Order.find({ user: req.user.id }).populate(
     //   "prompt"
     // );
+    console.log('User ID from token:', req.user.id);
 
     const purchasedOrders = await Order.find({ user: req.user.id })
       .populate({
@@ -154,6 +157,7 @@ export const getMyPurchasedPrompt = async (req, res) => {
           select: 'username fullName'
         }
       });
+       console.log('Orders found:', purchasedOrders.length);
     
     if (purchasedOrders.length === 0) {
       return res
