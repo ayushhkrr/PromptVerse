@@ -20,6 +20,7 @@ export const userRegister = async (req, res) => {
       username: username,
       email: email,
       password: password,
+      googleId: undefined, // Explicitly set to undefined for normal registration
     });
     const savedUser = await newUser.save();
 
@@ -57,8 +58,14 @@ export const userLogin = async (req, res) => {
     if ((!username && !email) || !password) {
       return res.status(400).json({ message: "Enter the necessary fields" });
     }
+
+    // Build query conditions - only include fields that have values
+    const orConditions = [];
+    if (username) orConditions.push({ username });
+    if (email) orConditions.push({ email });
+
     const user = await User.findOne({
-      $or: [{ username }, { email }],
+      $or: orConditions,
       status: "active",
     }).select("+password");
     if (!user) {
