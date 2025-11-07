@@ -85,6 +85,11 @@ export const createCheckoutSession = async (req, res) => {
   try {
     const promptId = req.params.id;
     const userId = req.user.id;
+    const checkOrder = await Order.findOne({user: userId, prompt: promptId})
+
+    if(checkOrder){
+      return res.status(400).json({message: 'You already own this prompt'})
+    }
 
     const prompt = await Prompt.findById(promptId);
 
@@ -103,7 +108,7 @@ export const createCheckoutSession = async (req, res) => {
     if (req.user.role === "seller" || req.user.role === 'admin') {
       return res
         .status(403)
-        .json({ message: "Sellers cannot purchase prompts." });
+        .json({ message: "Sellers or Admins cannot purchase prompts." });
     }
 
     if (prompt.price <= 0) {
@@ -111,6 +116,7 @@ export const createCheckoutSession = async (req, res) => {
         .status(400)
         .json({ message: "Price cannot be negative or zero." });
     }
+
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -146,9 +152,7 @@ export const createCheckoutSession = async (req, res) => {
 
 export const getMyPurchasedPrompt = async (req, res) => {
   try {
-    // const purchasedPrompt = await Order.find({ user: req.user.id }).populate(
-    //   "prompt"
-    // );
+    
     console.log('User ID from token:', req.user.id);
 
     const userExists = await User.findById(req.user.id);
