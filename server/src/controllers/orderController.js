@@ -158,9 +158,9 @@ export const getMyPurchasedPrompt = async (req, res) => {
     const purchasedOrders = await Order.find({ user: req.user.id })
       .populate({
         path: 'prompt',
-        select: 'title description body price promptType tags thumbnail purchaseCount seller',
+        select: 'title description body price promptType tags thumbnail purchaseCount user',
         populate: {
-          path: 'seller',
+          path: 'user',
           select: 'username fullName'
         }
       });
