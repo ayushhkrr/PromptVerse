@@ -77,11 +77,7 @@ function Register() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center py-12 px-4 starry-background">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-md w-full relative z-10"
-      >
+      <div className="max-w-md w-full relative z-10">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center space-x-2 mb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
@@ -95,13 +91,9 @@ function Register() {
 
         <div className="backdrop-blur-md bg-white/80 border border-gray-200 rounded-3xl shadow-xl p-8">
           {error && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"
-            >
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
               {error}
-            </motion.div>
+            </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -219,15 +211,13 @@ function Register() {
               </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               type="submit"
               disabled={loading}
               className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Create Account'}
-            </motion.button>
+            </button>
           </form>
 
           <div className="mt-6">
@@ -240,9 +230,7 @@ function Register() {
               </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={handleGoogleSignup}
               className="mt-4 w-full py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-xl shadow-sm hover:shadow-md transition-all flex items-center justify-center space-x-2"
             >
@@ -253,7 +241,7 @@ function Register() {
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
               <span>Sign up with Google</span>
-            </motion.button>
+            </button>
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">
@@ -263,7 +251,7 @@ function Register() {
             </Link>
           </p>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
