@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { AuthContext } from '../context/AuthContext';
 import { promptAPI, orderAPI } from '../services/api';
 import Navbar from '../components/Navbar';
@@ -12,10 +12,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedTag, setSelectedTag] = useState('');
   const [purchasingId, setPurchasingId] = useState(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [currentPreview, setCurrentPreview] = useState(null);
-  const [isPreviewLoading, setIsPreviewLoading] = useState(false);
-  const [previewError, setPreviewError] = useState('');
 
   const tags = ['All', 'ChatGPT', 'DALL-E', 'Writing', 'Coding', 'Marketing', 'Design'];
 
@@ -75,32 +71,6 @@ function Home() {
     }
   };
 
-  const handleOpenPreview = async (e, prompt) => {
-    e.stopPropagation(); // Stop the card from navigating
-    setIsPreviewOpen(true);
-    setIsPreviewLoading(true);
-    setCurrentPreview(prompt); // Store the whole prompt object
-    setPreviewError('');
-
-    try {
-      // Call the API to get the AI-generated preview
-      const response = await promptAPI.getPromptPreview(prompt._id);
-      // Store just the preview data (text or image URL)
-      setCurrentPreview(prev => ({ ...prev, aiResult: response.data.preview }));
-    } catch (err) {
-      setPreviewError(err.response?.data?.message || 'Failed to load preview');
-    } finally {
-      setIsPreviewLoading(false);
-    }
-  };
-
-  const handleClosePreview = () => {
-    setIsPreviewOpen(false);
-    setCurrentPreview(null);
-    setIsPreviewLoading(false);
-    setPreviewError('');
-  };
-
   return (
     <div className="min-h-screen relative overflow-hidden starry-background">
       <Navbar />
@@ -151,10 +121,8 @@ function Home() {
           <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">Browse by Tags</h3>
           <div className="flex flex-wrap gap-2 sm:gap-3">
             {tags.map((tag) => (
-              <motion.button
+              <button
                 key={tag}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedTag(tag)}
                 className={`px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-sm sm:text-base font-medium transition-all ${
                   selectedTag === tag || (selectedTag === '' && tag === 'All')
@@ -163,7 +131,7 @@ function Home() {
                 }`}
               >
                 {tag}
-              </motion.button>
+              </button>
             ))}
           </div>
         </motion.div>
@@ -188,8 +156,7 @@ function Home() {
               <motion.div
                 key={prompt._id}
                 variants={itemVariants}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl cursor-pointer group"
+                className="backdrop-blur-md bg-white/10 border border-white/20 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl cursor-pointer group hover:shadow-2xl transition-shadow"
                 onClick={() => navigate(`/prompt/${prompt._id}`)}
               >
                 {/* Prompt Image/Icon */}
@@ -248,24 +215,13 @@ function Home() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-2 sm:gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={(e) => handleOpenPreview(e, prompt)}
-                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 text-white text-sm rounded-lg hover:bg-white/20 transition-all"
-                    
-                    >
-                      Preview
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
+                    <button
                       onClick={(e) => handlePurchase(e, prompt._id)}
                       disabled={purchasingId === prompt._id}
-                      className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+                      className="w-full px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm rounded-lg shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
                     >
                       {purchasingId === prompt._id ? '...' : 'Buy'}
-                    </motion.button>
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -297,14 +253,12 @@ function Home() {
           >
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Ready to sell your prompts?</h3>
             <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6">Share your expertise and start earning today!</p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => navigate('/create-prompt')}
               className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all"
             >
               Create New Prompt
-            </motion.button>
+            </button>
           </motion.div>
         )}
 
@@ -317,83 +271,15 @@ function Home() {
           >
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">Want to become a seller?</h3>
             <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 px-4">Join our community of creators and start monetizing your prompts!</p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => navigate('/become-seller')}
               className="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-semibold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all"
             >
               Become a Seller
-            </motion.button>
+            </button>
           </motion.div>
         )}
       </div>
-      {/* --- PASTE THE MODAL CODE HERE --- */}
-      <AnimatePresence>
-        {isPreviewOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md"
-            onClick={handleClosePreview}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white/10 border border-white/20 backdrop-blur-lg rounded-2xl p-6 sm:p-8 max-w-lg w-full text-white"
-              onClick={(e) => e.stopPropagation()} // Stop click from closing modal
-            >
-              {isPreviewLoading ? (
-                <div className="flex flex-col items-center justify-center h-64">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full"
-                  />
-                  <p className="mt-4 text-gray-300">Generating AI Preview...</p>
-                </div>
-              ) : previewError ? (
-                <div className="flex flex-col items-center justify-center h-64">
-                  <span className="text-4xl">❌</span>
-                  <h3 className="text-xl font-bold mt-4">Error</h3>
-                  <p className="text-gray-300">{previewError}</p>
-                </div>
-              ) : (
-                currentPreview && (
-                  <div>
-                    <h2 className="text-2xl font-bold mb-4">{currentPreview.title}</h2>
-                    <h3 className="text-sm font-semibold text-gray-300 uppercase mb-2">Sample Input:</h3>
-                    <p className="p-3 bg-black/20 rounded-lg text-gray-200 font-mono text-sm mb-4">
-                      {currentPreview.sampleInput}
-                    </p>
-                    
-                    <h3 className="text-sm font-semibold text-gray-300 uppercase mb-2">AI Generated Preview:</h3>
-                    <div className="p-3 bg-black/20 rounded-lg max-h-64 overflow-y-auto">
-                      {/* This logic checks the prompt type to show an image or text */}
-                      {currentPreview.promptType === 'image' ? (
-                        <img src={currentPreview.aiResult} alt="AI Preview" className="rounded-lg" />
-                      ) : (
-                        <p className="text-white whitespace-pre-wrap">{currentPreview.aiResult}</p>
-                      )}
-                    </div>
-                  </div>
-                )
-              )}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleClosePreview}
-                className="w-full mt-6 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg shadow-lg"
-              >
-                Close
-              </motion.button>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      {/* --- END OF MODAL CODE --- */}
     </div>
   );
 }

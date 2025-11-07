@@ -45,13 +45,13 @@ function Landing() {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Colorful Blob Decorations */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
-      <div className="absolute top-0 right-0 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
-      <div className="absolute bottom-20 left-20 w-80 h-80 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000" />
-      <div className="absolute bottom-0 right-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-6000" />
-      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-8000" />
-      <div className="absolute bottom-1/4 right-1/3 w-56 h-56 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-10000" />
+      {/* Static Blob Decorations */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
+      <div className="absolute top-0 right-0 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
+      <div className="absolute bottom-20 left-20 w-80 h-80 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
+      <div className="absolute bottom-0 right-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
+      <div className="absolute bottom-1/4 right-1/3 w-56 h-56 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70" />
 
       {/* Navbar */}
       <motion.nav
@@ -70,22 +70,18 @@ function Landing() {
               </span>
             </div>
             <div className="flex items-center space-x-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
                 onClick={() => navigate('/login')}
                 className="px-4 py-2 rounded-lg text-gray-700 hover:text-gray-900 font-medium transition-colors"
               >
                 Login
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              </button>
+              <button
                 onClick={() => navigate('/register')}
                 className="px-6 py-2 rounded-xl bg-gray-900 text-white font-medium shadow-lg hover:shadow-xl transition-all"
               >
                 Sign up
-              </motion.button>
+              </button>
             </div>
           </div>
         </div>
@@ -129,8 +125,6 @@ function Landing() {
 
             <motion.button
               variants={fadeInUp}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={() => navigate('/register')}
               className="px-8 py-4 rounded-xl bg-gray-900 text-white text-lg font-bold shadow-xl hover:shadow-2xl transition-all"
             >
@@ -145,9 +139,7 @@ function Landing() {
               className="mt-20 relative h-[500px] flex items-center justify-center"
             >
               {/* Left Phone - Prompt Card */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              <div
                 className="absolute left-1/4 w-72 h-[480px] bg-gradient-to-br from-pink-200 via-purple-200 to-orange-200 rounded-[3rem] shadow-2xl p-4 transform -rotate-6 border-8 border-gray-900"
               >
                 <div className="w-full h-full bg-white/80 backdrop-blur-md rounded-[2.5rem] p-6 flex flex-col items-center justify-center">
@@ -161,12 +153,10 @@ function Landing() {
                     <div className="text-xs text-gray-600">Browse & Purchase</div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Right Phone - Message View */}
-              <motion.div
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              <div
                 className="absolute right-1/4 w-72 h-[480px] bg-gray-900 rounded-[3rem] shadow-2xl p-4 transform rotate-6 border-8 border-gray-900"
               >
                 <div className="w-full h-full bg-white rounded-[2.5rem] p-6">
@@ -213,7 +203,7 @@ function Landing() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -246,12 +236,9 @@ function Landing() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <motion.div
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl shadow-lg mb-6"
-                >
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl shadow-lg mb-6">
                   <span className="text-4xl">{feature.icon}</span>
-                </motion.div>
+                </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
                   {feature.title}
                 </h3>
@@ -268,14 +255,12 @@ function Landing() {
             viewport={{ once: true }}
             className="text-center mt-16"
           >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
               onClick={() => navigate('/register')}
               className="px-8 py-4 rounded-xl bg-gray-900 text-white text-lg font-bold shadow-xl hover:shadow-2xl transition-all"
             >
               Start browsing
-            </motion.button>
+            </button>
           </motion.div>
         </div>
       </section>
@@ -333,26 +318,21 @@ function Landing() {
             className="backdrop-blur-md bg-white/50 border border-gray-200 rounded-3xl p-12 shadow-xl"
           >
             <div className="flex flex-col items-center space-y-6">
-              <motion.div
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg"
-              >
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-4xl">📧</span>
-              </motion.div>
+              </div>
 
               <div className="text-center">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">Email Us</h3>
                 <p className="text-gray-600 mb-6">
                   We typically respond within 24 hours
                 </p>
-                <motion.a
+                <a
                   href="mailto:ayushhkrr@gmail.com"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
                   className="inline-block px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
                 >
                   ayushhkrr@gmail.com
-                </motion.a>
+                </a>
               </div>
             </div>
           </motion.div>

@@ -10,22 +10,20 @@ function PromptDetail() {
   const navigate = useNavigate();
   const { isAuthenticated } = useContext(AuthContext);
   const [prompt, setPrompt] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [purchasing, setPurchasing] = useState(false);
 
   useEffect(() => {
-    fetchPromptPreview();
+    fetchPromptDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const fetchPromptPreview = async () => {
+  const fetchPromptDetails = async () => {
     try {
       setLoading(true);
-      const response = await promptAPI.getPromptPreview(id);
+      const response = await promptAPI.getPromptById(id);
       setPrompt(response.data.prompt);
-      setPreview(response.data.preview);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to fetch prompt details');
     } finally {
@@ -116,31 +114,6 @@ function PromptDetail() {
                     </span>
                   </div>
                 </div>
-
-                {/* Preview Output */}
-                {preview && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="mt-6 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl"
-                  >
-                    <h3 className="text-lg font-bold text-gray-800 mb-3">
-                      Preview Output
-                    </h3>
-                    {prompt.promptType === 'image' && preview.imageUrl ? (
-                      <img
-                        src={preview.imageUrl}
-                        alt="Preview"
-                        className="w-full rounded-lg shadow-lg"
-                      />
-                    ) : (
-                      <p className="text-gray-700 whitespace-pre-wrap">
-                        {preview.text || preview}
-                      </p>
-                    )}
-                  </motion.div>
-                )}
               </div>
 
               {/* Right Side - Details */}
