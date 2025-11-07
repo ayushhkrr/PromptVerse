@@ -20,7 +20,7 @@
   }
 }
 
-/* Starry Night Background */
+/* Starry Night Background - Static */
 .starry-background {
   background: #000000;
   background-image:
@@ -40,18 +40,4 @@
   background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 200px 150px,
                        150px 50px, 250px 200px, 50px 150px, 300px 250px,
                        100px 300px, 320px 120px, 180px 280px;
-  animation: starfield 200s linear infinite;
-}
-
-@keyframes starfield {
-  from {
-    background-position: 0 0, 40px 60px, 130px 270px, 70px 100px, 200px 150px,
-                         150px 50px, 250px 200px, 50px 150px, 300px 250px,
-                         100px 300px, 320px 120px, 180px 280px;
-  }
-  to {
-    background-position: 0 400px, 40px 460px, 130px 670px, 70px 500px, 200px 550px,
-                         150px 450px, 250px 600px, 50px 550px, 300px 650px,
-                         100px 700px, 320px 520px, 180px 680px;
-  }
 }
